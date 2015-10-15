@@ -1,8 +1,7 @@
 /*
  * usr_cmd.c
  *
- *  Created on: Sep 15, 2015
- *      Author: uds002
+ *      Author: elc
  */
 #include <usr_cmd.h>
 

@@ -1,8 +1,6 @@
 /*
  * CircularBuffer.h
  *
- *  Created on: Sep 17, 2015
- *      Author: uds002
  */
 
 #ifndef USER_CIRCULARBUFFER_H_
@@ -10,12 +8,13 @@
 
 #include <os_type.h>
 
-#define BUFFER_LENGTH	3072//2048
+#define BUFFER_LENGTH	3072
 
 typedef struct {
 	uint16_t readIndex;
 	uint16_t writeIndex;
-	uint8_t * buffer;//uint8_t buffer[BUFFER_LENGTH];
+	uint8_t * buffer;
+	uint32_t length;
 	size_t bytesAvailable;
 }circular_buffer_t;
 

@@ -27,8 +27,8 @@ circular_buffer_t rx_cbuf;
 LOCAL volatile uint8_t state_cmd = 0;
 LOCAL volatile uint8_t state_mav = 0;
 LOCAL volatile uint32_t mav_rcv_length = 0;
-LOCAL volatile uint64_t mav_pend_lenght = 0;
-LOCAL volatile uint64_t mav_pend_lenght_rep = 0;
+LOCAL volatile uint32_t mav_pend_lenght = 0;
+LOCAL volatile uint32_t mav_pend_lenght_rep = 0;
 LOCAL volatile uint16_t mav_rcv_payload_length = 0;
 LOCAL volatile uint8_t serial_mav_recv_flag = 0;
 #define MAV_FRAME_HEADER	0xFE
@@ -167,10 +167,9 @@ uart0_rx_intr_handler(void *para)
     while (READ_PERI_REG(UART_STATUS(UART0)) & (UART_RXFIFO_CNT << UART_RXFIFO_CNT_S)) {
         RcvChar = READ_PERI_REG(UART_FIFO(UART0)) & 0xFF;
 
-        /* you can add your handle code below.*/
-
         *(pRxBuff->pWritePos) = RcvChar;
-
+		
+		/* you can add your handle code below.*/
 
     	switch(state_mav) {
 		case MAV_HEADER:
@@ -255,7 +254,7 @@ uart0_rx_intr_handler(void *para)
     }
 }
 
-ICACHE_FLASH_ATTR uint64_t uart0_rx_mav_available() {
+ICACHE_FLASH_ATTR uint32_t uart0_rx_mav_available() {
 	uint64_t len = 0;
 
 #if 0
@@ -318,7 +317,7 @@ ICACHE_FLASH_ATTR uint32_t uart0_rx_gets(uint8_t * data) {
 	return length;
 }
 
-ICACHE_FLASH_ATTR uint64_t uart0_rx_gets_len(uint8_t * data, uint64_t length) {
+ICACHE_FLASH_ATTR uint32_t uart0_rx_gets_len(uint8_t * data, uint64_t length) {
 	length = read(&rx_cbuf, data, length);
 	return length;
 }

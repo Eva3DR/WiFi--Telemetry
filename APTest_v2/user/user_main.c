@@ -1,3 +1,9 @@
+/*
+ * user_main.c
+ *
+ *      Author: elc
+ */
+
 #include <ets_sys.h>
 #include <osapi.h>
 #include <os_type.h>
@@ -67,14 +73,14 @@ LOCAL uint8_t serial_buffer[SERIAL_BUFFER_SIZE];
 LOCAL uint8_t udp_data_recv_flag = 0;
 LOCAL uint8_t udp_cmd_recv_flag = 0;
 LOCAL uint8_t udp_data_sent_flag = 0;
-LOCAL uint64_t serial_data_avbl_flag = 0;
+LOCAL uint32_t serial_data_avbl_flag = 0;
 LOCAL uint8_t station_connected_flag = 0;
 
 LOCAL uint8_t udp_setup();
 
 #define	CONF_STORAGE_ADDR	0x3D
 #define CONF_STORAGE_DATA_LENGTH sizeof(baud_rfPower_storage_t)
-#define M_CODE	"+MPy" // "TMP1"
+#define M_CODE	"xMPy"
 
 typedef struct {
 	uint32_t baudrate;
@@ -147,7 +153,6 @@ LOCAL void ICACHE_FLASH_ATTR cmd_exec(uint8_t udp_rx)
 			idx++;
 	}
 	if(f == 0) {
-		// print through uart?
 		return;
 	}
 
@@ -306,7 +311,7 @@ void wifi_handle_event_cb(System_Event_t *evt) {
 
 
 LOCAL void ICACHE_FLASH_ATTR recv_cb(void* arg, char* pdata, unsigned short len) {
-	udp_settings.local_port = baud_rf_data.port; //LOCAL_PORT;
+	udp_settings.local_port = baud_rf_data.port;
 	udp_conf.proto.udp = &udp_settings;
 	struct espconn * endpoint_info = (struct espconn *)arg;
 	memcpy(endpoint_ip,endpoint_info->proto.udp->remote_ip,4);
@@ -335,7 +340,7 @@ LOCAL void ICACHE_FLASH_ATTR udp_send(uint8_t * data)
 LOCAL void ICACHE_FLASH_ATTR event_task(os_event_t *e) {
 	static uint16_t buff_data_avb_flag = 0;
 	static uint16_t buff_data_avb_idx = 0;
-	uint64_t length = 0;
+	uint32_t length = 0;
 
 	system_soft_wdt_feed();
 	if((length = uart0_rx_mav_available()) > 0) {
@@ -386,7 +391,7 @@ void user_init(void)
 
 	create(&udp_rx_cbuf, UDP_RECV_BUFF_LENGTH);
 
-	wifi_softap_get_config(&s_ap_config);  // wifi_softap_get_config_default
+	wifi_softap_get_config(&s_ap_config);
 
 	udp_conf.type = ESPCONN_UDP;
 	udp_conf.state=ESPCONN_NONE;
